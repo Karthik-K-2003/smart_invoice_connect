@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Smart Invoice{% endblock %}</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+    <div id="flash-container" class="fixed top-5 right-5 z-50 space-y-3">
+
+        {% for category, message in messages %}
+
+        <div class="
+                    flash-message
+                    px-5 py-3 rounded-xl shadow-lg text-white font-medium transition-all duration-500
+                    {% if category == 'success' %}
+                        bg-green-500
+                    {% else %}
+                        bg-red-500
+                    {% endif %}
+                ">
+
+            {{ message }}
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+    <script src="{{ url_for('static', filename='js/flash_messages.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/password_toggle.js') }}"></script>
+</body>
+
+</html>

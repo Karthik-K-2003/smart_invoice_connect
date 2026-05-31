@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100">
+
+    <div class="flex h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-gradient-to-b from-slate-950 to-slate-900 text-white flex flex-col">
+
+            <!-- LOGO -->
+            <div class="p-6 border-b border-slate-800">
+
+                <h1 class="text-3xl font-bold">
+                    Smart <span class="text-cyan-400">Invoice</span>
+                </h1>
+
+            </div>
+
+            <!-- MENU -->
+            <nav class="flex-1 p-4">
+
+                <ul class="space-y-2">
+
+                    <li>
+                        <a href="/dashboard"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'dashboard' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            📊 Dashboard
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/products"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'products' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            📦 Products
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/customers"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'customers' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            👥 Customers
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/invoices"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'invoices' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            🧾 Invoices
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/payments"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'payments' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            💳 Payments
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/reports"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'reports' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            📈 Reports
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="/suggestions"
+                            class="block px-4 py-3 rounded-lg transition duration-200
+                            {% if active_page == 'suggestions' %}
+                                bg-cyan-500 text-white shadow-md
+                            {% else %}
+                                hover:bg-slate-800
+                            {% endif %}">
+                            💡 Suggestions
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+            <!-- LOGOUT -->
+            <div class="p-4 border-t border-slate-800">
+
+                <a href="/logout"
+                    class="block text-center bg-red-500 hover:bg-red-600 py-3 rounded-lg font-medium transition">
+                    Logout
+                </a>
+
+            </div>
+
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="flex-1 flex flex-col">
+
+            <!-- NAVBAR -->
+            <header class="bg-white border-b border-slate-200 px-8 py-4 flex justify-between items-center shadow-lg">
+
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-800">
+                        {% block page_title %}Dashboard{% endblock %}
+                    </h2>
+                </div>
+
+                <div class="text-right">
+
+                    <p class="font-semibold text-slate-800">
+                        {{ session['user_name'] }}
+                    </p>
+
+                    <p class="text-sm text-slate-500">
+                        Smart Invoice User
+                    </p>
+
+                </div>
+
+            </header>
+
+            <!-- PAGE CONTENT -->
+            <main class="flex-1 p-6 overflow-y-auto">
+
+                <div class="bg-white rounded-xl shadow-sm p-6 min-h-full">
+
+                    {% block content %}
+                    {% endblock %}
+
+                </div>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>
