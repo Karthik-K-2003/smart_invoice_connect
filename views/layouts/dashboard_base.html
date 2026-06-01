@@ -31,8 +31,7 @@
                 <ul class="space-y-2">
 
                     <li>
-                        <a href="/dashboard"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('dashboard.dashboard') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'dashboard' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -43,8 +42,7 @@
                     </li>
 
                     <li>
-                        <a href="/products"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('products.products') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'products' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -55,8 +53,7 @@
                     </li>
 
                     <li>
-                        <a href="/customers"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('customers.customers') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'customers' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -67,8 +64,7 @@
                     </li>
 
                     <li>
-                        <a href="/invoices"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('invoices.invoices') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'invoices' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -79,8 +75,7 @@
                     </li>
 
                     <li>
-                        <a href="/payments"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('payments.payments') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'payments' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -91,8 +86,7 @@
                     </li>
 
                     <li>
-                        <a href="/reports"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('reports.reports') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'reports' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -103,8 +97,7 @@
                     </li>
 
                     <li>
-                        <a href="/suggestions"
-                            class="block px-4 py-3 rounded-lg transition duration-200
+                        <a href="{{ url_for('suggestions.suggestions') }}" class="block px-4 py-3 rounded-lg transition duration-200
                             {% if active_page == 'suggestions' %}
                                 bg-cyan-500 text-white shadow-md
                             {% else %}
@@ -121,7 +114,7 @@
             <!-- LOGOUT -->
             <div class="p-4 border-t border-slate-800">
 
-                <a href="/logout"
+                <a href="{{ url_for('auth.logout') }}"
                     class="block text-center bg-red-500 hover:bg-red-600 py-3 rounded-lg font-medium transition">
                     Logout
                 </a>
@@ -142,22 +135,63 @@
                     </h2>
                 </div>
 
-                <div class="text-right">
+                <div class="relative">
 
-                    <p class="font-semibold text-slate-800">
-                        {{ session['user_name'] }}
-                    </p>
+                    <button onclick="toggleDropdown()"
+                        class="flex items-center gap-3 bg-slate-100 hover:bg-slate-200 px-4 py-2 rounded-xl transition border border-slate-200">
 
-                    <p class="text-sm text-slate-500">
-                        Smart Invoice User
-                    </p>
+                        <p class="font-semibold text-slate-800">
+                            👤{{ session['user_name'] }}
+                        </p>
+
+                    </button>
+
+                    <!-- DROPDOWN -->
+                    <div id="userDropdown"
+                        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 z-50">
+
+                        <a href="{{ url_for('settings.settings') }}" class="block px-4 py-3 hover:bg-slate-100 transition">
+                            ⚙️ Settings
+                        </a>
+
+                    </div>
 
                 </div>
 
             </header>
 
+            {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+            <div id="flash-container" class="fixed top-20 right-5 z-50 space-y-3">
+
+                {% for category, message in messages %}
+
+                <div class="
+                    flash-message
+                    px-5 py-3 rounded-xl shadow-lg text-white font-medium transition-all duration-500
+                    {% if category == 'success' %}
+                        bg-green-500
+                    {% else %}
+                        bg-red-500
+                    {% endif %}
+                ">
+
+                    {{ message }}
+
+                </div>
+
+                {% endfor %}
+
+            </div>
+
+            {% endif %}
+
+            {% endwith %}
+
             <!-- PAGE CONTENT -->
-            <main class="flex-1 p-6 overflow-y-auto">
+            <main class="flex-1 p-2 overflow-y-auto">
 
                 <div class="bg-white rounded-xl shadow-sm p-6 min-h-full">
 
@@ -172,6 +206,8 @@
 
     </div>
 
+    <script src="{{ url_for('static', filename='js/navbar_dropdown.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flash_messages.js') }}"></script>
 </body>
 
 </html>

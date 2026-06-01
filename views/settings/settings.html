@@ -1,0 +1,289 @@
+{% extends 'layouts/settings_base.html' %}
+
+{% block title %}
+Settings | Smart Invoice
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto">
+
+    <!-- PAGE TITLE -->
+
+    <div class="mb-8">
+
+        <h1 class="text-4xl font-bold text-slate-800">
+            Account Settings
+        </h1>
+
+        <p class="text-slate-500 mt-2">
+            Manage your profile, security and account information.
+        </p>
+
+    </div>
+
+    <div class="grid grid-cols-12 gap-6">
+
+        <!-- LEFT MENU -->
+
+        <div class="col-span-3">
+
+            <div class="bg-white rounded-2xl shadow-sm border p-4">
+
+                <h2 class="font-bold text-xl mb-4">
+                    Settings
+                </h2>
+
+                <div class="space-y-2">
+
+                    <button onclick="showSection('profile', this)"
+                        class="settings-btn bg-cyan-500 text-white w-full text-left px-4 py-3 rounded-lg">
+
+                        👤 Profile
+
+                    </button>
+
+                    <button onclick="showSection('security', this)"
+                        class="settings-btn w-full text-left px-4 py-3 rounded-lg">
+
+                        🔒 Security
+
+                    </button>
+
+                    <button onclick="showSection('account', this)"
+                        class="settings-btn w-full text-left px-4 py-3 rounded-lg">
+
+                        ℹ️ Account Information
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT CONTENT -->
+
+        <div class="col-span-9">
+
+            <!-- PROFILE -->
+
+            <div id="profile-section">
+
+                <div class="bg-white rounded-2xl shadow-sm border p-8">
+
+                    <div class="flex justify-between items-center mb-6">
+
+                        <h2 class="text-3xl font-bold">
+                            Profile Information
+                        </h2>
+
+                        <button id="editBtn" onclick="enableEdit()"
+                            class="bg-cyan-500 hover:bg-cyan-600 text-white px-5 py-3 rounded-xl">
+
+                            ✏️ Edit Profile
+
+                        </button>
+
+                    </div>
+
+                    <form action="{{ url_for('settings.update_profile') }}" method="POST">
+
+                        <div class="grid md:grid-cols-2 gap-6">
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+                                    Full Name
+                                </label>
+
+                                <input id="name" type="text" name="name" value="{{ user['name'] }}" readonly
+                                    class="w-full border rounded-xl px-4 py-3">
+
+                            </div>
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+                                    Email Address
+                                </label>
+
+                                <input id="email" type="email" name="email" value="{{ user['email'] }}" readonly
+                                    class="w-full border rounded-xl px-4 py-3">
+
+                            </div>
+
+                        </div>
+
+                        <div id="actionButtons" class="hidden mt-6 flex gap-3">
+
+                            <button type="submit"
+                                class="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-xl">
+
+                                Save Changes
+
+                            </button>
+
+                            <button type="button" onclick="cancelEdit()"
+                                class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl">
+
+                                Cancel
+
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- SECURITY -->
+
+            <div id="security-section" class="hidden">
+
+                <div class="bg-white rounded-2xl shadow-sm border p-8">
+
+                    <h2 class="text-3xl font-bold mb-2">
+                        Security Settings
+                    </h2>
+
+                    <p class="text-slate-500 mb-6">
+                        Update your account password.
+                    </p>
+
+                    <form action="{{ url_for('settings.change_password') }}" method="POST">
+
+                        <div class="space-y-6">
+
+                            <!-- CURRENT PASSWORD -->
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+                                    Current Password
+                                </label>
+
+                                <div class="relative">
+
+                                    <input id="currentPassword" type="password" name="current_password"
+                                        class="w-full border rounded-xl px-4 py-3 pr-12" required>
+
+                                    <button type="button" onclick="toggleCurrentPassword()"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2">
+
+                                        <span id="currentEyeIcon">👁️</span>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- NEW PASSWORD -->
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+                                    New Password
+                                </label>
+
+                                <div class="relative">
+
+                                    <input id="newPassword" type="password" name="new_password"
+                                        class="w-full border rounded-xl px-4 py-3 pr-12" required>
+
+                                    <button type="button" onclick="toggleNewPassword()"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2">
+
+                                        <span id="newEyeIcon">👁️</span>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                            <!-- CONFIRM PASSWORD -->
+
+                            <div>
+
+                                <label class="block mb-2 font-medium">
+                                    Confirm New Password
+                                </label>
+
+                                <div class="relative">
+
+                                    <input id="confirmPassword" type="password" name="confirm_password"
+                                        class="w-full border rounded-xl px-4 py-3 pr-12" required>
+
+                                    <button type="button" onclick="toggleConfirmPassword()"
+                                        class="absolute right-4 top-1/2 -translate-y-1/2">
+
+                                        <span id="confirmEyeIcon">👁️</span>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <button type="submit"
+                            class="mt-6 bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-xl">
+
+                            Update Password
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+            <!-- ACCOUNT INFO -->
+
+            <div id="account-section" class="hidden">
+
+                <div class="bg-white rounded-2xl shadow-sm border p-8">
+
+                    <h2 class="text-3xl font-bold mb-6">
+                        Account Information
+                    </h2>
+
+                    <div class="space-y-4">
+
+                        <p>
+                            <strong>User ID:</strong>
+                            {{ user['id'] }}
+                        </p>
+
+                        <p>
+                            <strong>Name:</strong>
+                            {{ user['name'] }}
+                        </p>
+
+                        <p>
+                            <strong>Email:</strong>
+                            {{ user['email'] }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+{% endblock %}

@@ -11,6 +11,7 @@ from blueprints.invoices import invoices_bp
 from blueprints.payments import payments_bp
 from blueprints.reports import reports_bp
 from blueprints.suggestions import suggestions_bp
+from blueprints.settings import settings_bp
 
 app = Flask(__name__, template_folder="views")
 app.secret_key = SECRET_KEY
@@ -40,6 +41,7 @@ app.register_blueprint(invoices_bp)
 app.register_blueprint(payments_bp)
 app.register_blueprint(reports_bp)
 app.register_blueprint(suggestions_bp)
+app.register_blueprint(settings_bp)
 
 
 if __name__ == "__main__":
