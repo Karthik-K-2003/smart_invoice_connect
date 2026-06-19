@@ -7,4 +7,5 @@ def dashboard():
     # CHECK USER LOGIN
     if "user_id" not in session:
         return redirect("/login")
-    return render_template("dashboard/dashboard.html", active_page="dashboard")
+    shop_type = session.get("shop_type")
+    return render_template("dashboard/dashboard.html",shop_type = shop_type, active_page="dashboard")

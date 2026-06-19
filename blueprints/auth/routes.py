@@ -14,6 +14,7 @@ def register():
     if request.method == "POST":
         name = request.form["name"]
         email = request.form["email"]
+        shop_type = request.form["shop_type"]
         password = request.form["password"]
         confirm_password = request.form["confirm_password"]
 
@@ -39,8 +40,8 @@ def register():
 
         # INSERT USER
         conn.execute(
-            "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-            (name, email, hashed_password)
+            "INSERT INTO users (name, email, password, shop_type) VALUES (?, ?, ?, ?)",
+            (name, email, hashed_password, shop_type)
         )
 
         conn.commit()
@@ -72,6 +73,7 @@ def login():
         if user and check_password_hash(user["password"], password):
             session["user_id"] = user["id"]
             session["user_name"] = user["name"]
+            session["shop_type"] = user["shop_type"]
 
             # REMEMBER ME
             if remember:
