@@ -2,7 +2,7 @@ from db import get_db_connection
 
 conn = get_db_connection()
 
-#Users Table
+# USER TABLE
 conn.execute('''
 CREATE TABLE IF NOT EXISTS users(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users(
 ''')
 
 
-#Product Table
+# PRODUCT TABLE
 conn.execute('''
 CREATE TABLE IF NOT EXISTS products(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS products(
 ''')
 
 
-#Customer Table
+# CUSTOMER TABLE
 conn.execute('''
 CREATE TABLE IF NOT EXISTS customers(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +43,34 @@ CREATE TABLE IF NOT EXISTS customers(
 ''')
 
 
+# INVOICES TABLE
+conn.execute('''
+CREATE TABLE IF NOT EXISTS invoices(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    customer_id INTEGER NOT NULL,
+    subtotal REAL NOT NULL,
+    gst_amount REAL NOT NULL,
+    grand_total REAL NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+''')
+
+
+# INVOICE ITEMS TABLE
+conn.execute('''
+CREATE TABLE IF NOT EXISTS invoice_items(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invoice_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    quantity INTEGER NOT NULL,
+    price REAL NOT NULL,
+    gst_percentage REAL NOT NULL
+)
+''')
+
+
 conn.commit()
 conn.close()
 
-print("Users table created successfully.")
+print("Table created successfully.")

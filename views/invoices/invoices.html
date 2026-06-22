@@ -6,8 +6,81 @@
 
 {% block content %}
 
-<h1 class="text-2xl font-semibold">
-    Invoices Module
-</h1>
+<div class="bg-white p-6 rounded-xl shadow">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Create Invoice
+    </h2>
+
+    <!-- CUSTOMER -->
+
+    <div class="mb-4">
+
+        <label class="block mb-2 font-medium">
+            Select Customer
+        </label>
+
+        <select class="w-full border rounded-lg px-4 py-3">
+
+            <option>Select Customer</option>
+
+            {% for customer in customers %}
+                <option>
+                    {{ customer["customer_name"] }}
+                </option>
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <!-- PRODUCT -->
+
+    <div class="grid grid-cols-3 gap-4">
+
+        <div>
+
+            <label class="block mb-2 font-medium">
+                Product
+            </label>
+
+            <select class="w-full border rounded-lg px-4 py-3">
+
+                <option>Select Product</option>
+
+                {% for product in products %}
+                    <option>
+                        {{ product["product_name"] }}
+                    </option>
+                {% endfor %}
+
+            </select>
+
+        </div>
+
+        <div>
+
+            <label class="block mb-2 font-medium">
+                Quantity
+            </label>
+
+            <input
+                type="number"
+                class="w-full border rounded-lg px-4 py-3">
+
+        </div>
+
+        <div class="flex items-end">
+
+            <button
+                class="bg-cyan-500 text-white px-5 py-3 rounded-lg">
+                Add Item
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
 
 {% endblock %}
