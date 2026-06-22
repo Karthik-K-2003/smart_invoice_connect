@@ -13,21 +13,20 @@
     </h2>
 
     <!-- CUSTOMER -->
-
     <div class="mb-4">
 
         <label class="block mb-2 font-medium">
             Select Customer
         </label>
 
-        <select class="w-full border rounded-lg px-4 py-3">
+        <select id="customerSelect" class="w-full border rounded-lg px-4 py-3">
 
             <option>Select Customer</option>
 
             {% for customer in customers %}
-                <option>
-                    {{ customer["customer_name"] }}
-                </option>
+            <option value="{{ customer['id'] }}">
+                {{ customer["customer_name"] }}
+            </option>
             {% endfor %}
 
         </select>
@@ -35,7 +34,6 @@
     </div>
 
     <!-- PRODUCT -->
-
     <div class="grid grid-cols-3 gap-4">
 
         <div>
@@ -44,14 +42,15 @@
                 Product
             </label>
 
-            <select class="w-full border rounded-lg px-4 py-3">
+            <select id="productSelect" class="w-full border rounded-lg px-4 py-3">
 
                 <option>Select Product</option>
 
                 {% for product in products %}
-                    <option>
-                        {{ product["product_name"] }}
-                    </option>
+                <option value="{{ product['id'] }}" data-name="{{ product['product_name'] }}" data-price="{{ product['price'] }}"
+                    data-gst="{{ product['gst_percentage'] }}">
+                    {{ product["product_name"] }}
+                </option>
                 {% endfor %}
 
             </select>
@@ -64,16 +63,13 @@
                 Quantity
             </label>
 
-            <input
-                type="number"
-                class="w-full border rounded-lg px-4 py-3">
+            <input type="number" id="quantity" min="1" value="1" class="w-full border rounded-lg px-4 py-3">
 
         </div>
 
         <div class="flex items-end">
 
-            <button
-                class="bg-cyan-500 text-white px-5 py-3 rounded-lg">
+            <button type="button" id="addItemBtn" class="bg-cyan-500 text-white px-5 py-3 rounded-lg">
                 Add Item
             </button>
 
@@ -81,6 +77,83 @@
 
     </div>
 
+    <!-- INVOICE ITEMS -->
+    <div class="mt-8">
+
+        <h3 class="text-xl font-semibold mb-4">
+            Invoice Items
+        </h3>
+
+        <div class="bg-gray-50 rounded-lg overflow-hidden">
+
+            <table class="w-full">
+
+                <thead class="bg-gray-200">
+
+                    <tr>
+                        <th class="text-left px-4 py-3">Product</th>
+                        <th class="text-left px-4 py-3">Qty</th>
+                        <th class="text-left px-4 py-3">Price</th>
+                        <th class="text-left px-4 py-3">GST %</th>
+                        <th class="text-left px-4 py-3">Total</th>
+                        <th class="text-left px-4 py-3">Action</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="invoiceItemsBody">
+
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-gray-500">
+                            No items added
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- TOTALS -->
+    <div class="mt-8 flex justify-end">
+
+        <div class="w-80 bg-gray-50 p-4 rounded-lg">
+
+            <div class="flex justify-between mb-2">
+                <span>Subtotal</span>
+                <span id="subtotal">₹0.00</span>
+            </div>
+
+            <div class="flex justify-between mb-2">
+                <span>GST Amount</span>
+                <span id="gstAmount">₹0.00</span>
+            </div>
+
+            <hr class="my-2">
+
+            <div class="flex justify-between font-bold text-lg">
+                <span>Grand Total</span>
+                <span id="grandTotal">₹0.00</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Save Invoive -->
+    <div class="mt-6 flex justify-end">
+
+        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg">
+            Save Invoice
+        </button>
+
+    </div>
+
 </div>
+
+<script src="{{ url_for('static', filename='js/invoice.js') }}"></script>
 
 {% endblock %}
