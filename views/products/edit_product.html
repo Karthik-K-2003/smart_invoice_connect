@@ -1,0 +1,82 @@
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}Edit Product{% endblock %}
+
+{% block page_title %}Edit Product{% endblock %}
+
+{% block content %}
+
+<div class="bg-white p-6 rounded-xl shadow max-w-2xl">
+
+    <h2 class="text-2xl font-bold mb-6">
+        Edit Product
+    </h2>
+
+    <form method="POST">
+
+        <div class="space-y-4">
+
+            <input
+                type="text"
+                name="product_name"
+                value="{{ product['product_name'] }}"
+                class="w-full border rounded-lg px-4 py-3"
+                required>
+
+            <input
+                type="text"
+                name="category"
+                value="{{ product['category'] }}"
+                class="w-full border rounded-lg px-4 py-3"
+                required>
+
+            <input
+                type="number"
+                step="1"
+                name="price"
+                value="{{ product['price'] }}"
+                class="w-full border rounded-lg px-4 py-3"
+                required>
+
+            <select
+                name="gst_percentage"
+                class="w-full border rounded-lg px-4 py-3"
+                required>
+
+                <option value="0" {% if product["gst_percentage"] == 0 %}selected{% endif %}>0%</option>
+                <option value="5" {% if product["gst_percentage"] == 5 %}selected{% endif %}>5%</option>
+                <option value="12" {% if product["gst_percentage"] == 12 %}selected{% endif %}>12%</option>
+                <option value="18" {% if product["gst_percentage"] == 18 %}selected{% endif %}>18%</option>
+                <option value="28" {% if product["gst_percentage"] == 28 %}selected{% endif %}>28%</option>
+
+            </select>
+
+            <input
+                type="number"
+                name="stock"
+                value="{{ product['stock'] }}"
+                class="w-full border rounded-lg px-4 py-3"
+                required>
+
+        </div>
+
+        <div class="flex gap-3 mt-6">
+
+            <a href="{{ url_for('products.products') }}"
+               class="bg-gray-400 text-white px-5 py-2 rounded-lg">
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="bg-cyan-500 text-white px-5 py-2 rounded-lg">
+                Update Product
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

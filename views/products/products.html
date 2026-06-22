@@ -6,8 +6,169 @@
 
 {% block content %}
 
-<h1 class="text-2xl font-semibold">
-    Products Module
-</h1>
+<div class="flex justify-between items-center mb-6">
+
+    <h2 class="text-2xl font-bold text-gray-800">
+        Product Management
+    </h2>
+
+    <button onclick="openModal()" class="bg-cyan-500 hover:bg-cyan-600 text-white px-5 py-2 rounded-lg font-medium">
+        + Add Product
+    </button>
+
+</div>
+
+<!-- PRODUCTS TABLE -->
+
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+
+            <tr>
+                <th class="text-left px-4 py-3">Product Name</th>
+                <th class="text-left px-4 py-3">Category</th>
+                <th class="text-left px-4 py-3">Price</th>
+                <th class="text-left px-4 py-3">GST %</th>
+                <th class="text-left px-4 py-3">Stock</th>
+                <th class="text-left px-4 py-3">Actions</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if products %}
+
+            {% for product in products %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+                    {{ product["product_name"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ product["category"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    ₹{{ product["price"]|int }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ product["gst_percentage"]|int }}%
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ product["stock"] }}
+                </td>
+
+                <td class="px-4 py-3">
+
+                    <a href="{{ url_for('products.edit_product', product_id=product['id']) }}"
+                        class="bg-yellow-500 text-white px-3 py-1 rounded">
+                        Edit
+                    </a>
+
+                    <a href="{{ url_for('products.delete_product', product_id=product['id']) }}"
+                        onclick="return confirm('Delete this product?')"
+                        class="bg-red-500 text-white px-3 py-1 rounded ml-2">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            {% else %}
+
+            <tr>
+                <td colspan="6" class="text-center py-6 text-gray-500">
+                    No products found
+                </td>
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- ADD PRODUCT MODAL -->
+
+<div id="productModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+    <div class="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl">
+
+        <h2 class="text-xl font-bold mb-4">
+            Add Product
+        </h2>
+
+        <form method="POST" action="{{ url_for('products.add_product') }}">
+
+            <div class="space-y-4">
+
+                <input type="text" name="product_name" placeholder="Product Name"
+                    class="w-full border rounded-lg px-4 py-2" required>
+
+                <input type="text" name="category" placeholder="Category" class="w-full border rounded-lg px-4 py-2"
+                    required>
+
+                <input type="number" step="1" name="price" placeholder="Price"
+                    class="w-full border rounded-lg px-4 py-2" required>
+
+                <select name="gst_percentage" class="w-full border rounded-lg px-4 py-2" required>
+
+                    <option value="">Select GST %</option>
+                    <option value="0">0%</option>
+                    <option value="5">5%</option>
+                    <option value="12">12%</option>
+                    <option value="18">18%</option>
+                    <option value="28">28%</option>
+
+                </select>
+
+                <input type="number" name="stock" placeholder="Stock Quantity"
+                    class="w-full border rounded-lg px-4 py-2" required>
+
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+
+                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg">
+                    Cancel
+                </button>
+
+                <button type="submit" class="px-4 py-2 bg-cyan-500 text-white rounded-lg">
+                    Save Product
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+
+    function openModal() {
+        document.getElementById("productModal").classList.remove("hidden");
+        document.getElementById("productModal").classList.add("flex");
+    }
+
+    function closeModal() {
+        document.getElementById("productModal").classList.remove("flex");
+        document.getElementById("productModal").classList.add("hidden");
+    }
+
+</script>
 
 {% endblock %}

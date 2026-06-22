@@ -6,8 +6,134 @@
 
 {% block content %}
 
-<h1 class="text-2xl font-semibold">
-    Customers Module
-</h1>
+<div class="flex justify-between items-center mb-6">
+
+    <h2 class="text-2xl font-bold text-gray-800">
+        Customer Management
+    </h2>
+
+    <button onclick="openModal()" class="bg-cyan-500 hover:bg-cyan-600 text-white px-5 py-2 rounded-lg font-medium">
+        + Add Customer
+    </button>
+
+</div>
+
+<div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="text-left px-4 py-3">Customer Name</th>
+                <th class="text-left px-4 py-3">Phone</th>
+                <th class="text-left px-4 py-3">Email</th>
+                <th class="text-left px-4 py-3">Address</th>
+                <th class="text-left px-4 py-3">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% if customers %}
+
+            {% for customer in customers %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">{{ customer["customer_name"] }}</td>
+                <td class="px-4 py-3">{{ customer["phone"] }}</td>
+                <td class="px-4 py-3">{{ customer["email"] }}</td>
+                <td class="px-4 py-3">{{ customer["address"] }}</td>
+
+                <td class="px-4 py-3">
+
+                    <a href="{{ url_for('customers.edit_customer', customer_id=customer['id']) }}"
+                        class="bg-yellow-500 text-white px-3 py-1 rounded">
+                        Edit
+                    </a>
+
+                    <a href="{{ url_for('customers.delete_customer', customer_id=customer['id']) }}"
+                        onclick="return confirm('Delete this customer?')"
+                        class="bg-red-500 text-white px-3 py-1 rounded ml-2">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            {% else %}
+
+            <tr>
+                <td colspan="5" class="text-center py-6 text-gray-500">
+                    No customers found
+                </td>
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- ADD CUSTOMER MODAL -->
+
+<div id="customerModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+    <div class="bg-white rounded-xl p-6 w-full max-w-md">
+
+        <h2 class="text-xl font-bold mb-4">
+            Add Customer
+        </h2>
+
+        <form method="POST" action="{{ url_for('customers.add_customer') }}">
+
+            <div class="space-y-4">
+
+                <input type="text" name="customer_name" placeholder="Customer Name"
+                    class="w-full border rounded-lg px-4 py-2" required>
+
+                <input type="text" name="phone" placeholder="Phone Number" class="w-full border rounded-lg px-4 py-2"
+                    required>
+
+                <input type="email" name="email" placeholder="Email Address" class="w-full border rounded-lg px-4 py-2">
+
+                <textarea name="address" placeholder="Address" class="w-full border rounded-lg px-4 py-2"></textarea>
+
+            </div>
+
+            <div class="flex justify-end gap-3 mt-6">
+
+                <button type="button" onclick="closeModal()" class="px-4 py-2 bg-gray-300 rounded-lg">
+                    Cancel
+                </button>
+
+                <button type="submit" class="px-4 py-2 bg-cyan-500 text-white rounded-lg">
+                    Save Customer
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById("customerModal").classList.remove("hidden");
+        document.getElementById("customerModal").classList.add("flex");
+    }
+
+    function closeModal() {
+        document.getElementById("customerModal").classList.remove("flex");
+        document.getElementById("customerModal").classList.add("hidden");
+    }
+</script>
 
 {% endblock %}
