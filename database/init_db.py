@@ -70,6 +70,20 @@ CREATE TABLE IF NOT EXISTS invoice_items(
 ''')
 
 
+# BUSINESS SETTINGS TABLE
+conn.execute('''
+CREATE TABLE IF NOT EXISTS business_settings(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER UNIQUE,
+    shop_name TEXT,
+    address TEXT,
+    phone TEXT,
+    email TEXT,
+    gst_number TEXT
+)
+''')
+
+
 conn.commit()
 conn.close()
 

@@ -18,11 +18,21 @@ def settings():
         (session["user_id"],)
     ).fetchone()
 
+    business = conn.execute(
+        """
+        SELECT *
+        FROM business_settings
+        WHERE user_id = ?
+        """,
+        (session["user_id"],)
+    ).fetchone()
+
     conn.close()
 
     return render_template(
         "settings/settings.html",
-        user=user
+        user=user,
+        business=business
     )
 
 
@@ -141,6 +151,88 @@ def change_password():
 
     flash(
         "Password updated successfully!",
+        "success"
+    )
+
+    return redirect("/settings")
+
+
+# Update Business Profile
+@settings_bp.route("/update-business", methods=["POST"])
+def update_business():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
+    shop_name = request.form["shop_name"]
+    address = request.form["address"]
+    phone = request.form["phone"]
+    business_email = request.form["business_email"]
+    gst_number = request.form.get("gst_number", "")
+
+    conn = get_db_connection()
+
+    existing = conn.execute(
+        """
+        SELECT *
+        FROM business_settings
+        WHERE user_id = ?
+        """,
+        (session["user_id"],)
+    ).fetchone()
+
+    if existing:
+
+        conn.execute(
+            """
+            UPDATE business_settings
+            SET shop_name=?,
+                address=?,
+                phone=?,
+                email=?,
+                gst_number=?
+            WHERE user_id=?
+            """,
+            (
+                shop_name,
+                address,
+                phone,
+                business_email,
+                gst_number,
+                session["user_id"]
+            )
+        )
+
+    else:
+
+        conn.execute(
+            """
+            INSERT INTO business_settings
+            (
+                user_id,
+                shop_name,
+                address,
+                phone,
+                email,
+                gst_number
+            )
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                session["user_id"],
+                shop_name,
+                address,
+                phone,
+                business_email,
+                gst_number
+            )
+        )
+
+    conn.commit()
+    conn.close()
+
+    flash(
+        "Business details saved successfully!",
         "success"
     )
 

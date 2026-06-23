@@ -1,0 +1,112 @@
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}Invoice History{% endblock %}
+
+{% block page_title %}Invoice History{% endblock %}
+
+{% block content %}
+
+<div class="bg-white p-6 rounded-xl shadow">
+
+    <div class="flex justify-between items-center mb-6">
+
+
+        <form method="GET" class="flex gap-3">
+
+            <input type="text" name="search" value="{{ search }}" placeholder="Search Invoice ID or Customer"
+                class="border border-black rounded-lg px-4 py-2 w-80">
+
+            <button type="submit" class="bg-cyan-500 text-white px-5 py-2 rounded-lg">
+
+                Search
+
+            </button>
+
+
+            <input type="date" name="from_date" value="{{ from_date }}" class="border rounded-lg px-4 py-2">
+
+            <input type="date" name="to_date" value="{{ to_date }}" class="border rounded-lg px-4 py-2">
+
+            <button type="submit" class="bg-cyan-500 text-white px-5 py-2 rounded-lg">
+
+                Filter
+
+            </button>
+            <a href="{{ url_for('invoices.invoice_history') }}" class="bg-gray-500 text-white px-5 py-2 rounded-lg">
+
+                Reset
+
+            </a>
+
+        </form>
+
+        <a href="{{ url_for('invoices.invoices') }}" class="bg-cyan-500 text-white px-4 py-2 rounded-lg">
+
+            + Create Invoice
+
+        </a>
+
+    </div>
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+
+            <tr>
+                <th class="px-4 py-3 text-left">Invoice ID</th>
+                <th class="px-4 py-3 text-left">Customer</th>
+                <th class="px-4 py-3 text-left">Date</th>
+                <th class="px-4 py-3 text-left">Total</th>
+                <th class="px-4 py-3 text-left">Actions</th>
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% for invoice in invoices %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+                    INV{{ invoice["id"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ invoice["customer_name"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ invoice["created_at"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    ₹{{ invoice["grand_total"] }}
+                </td>
+
+                <td class="px-4 py-3">
+
+                    <a href="{{ url_for('invoices.view_invoice', invoice_id=invoice['id']) }}"
+                        class="bg-blue-500 text-white px-3 py-1 rounded">
+                        View
+                    </a>
+
+                    <a href="{{ url_for('invoices.delete_invoice', invoice_id=invoice['id']) }}"
+                        onclick="return confirm('Delete this invoice?')"
+                        class="bg-red-500 text-white px-3 py-1 rounded ml-2">
+                        Delete
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

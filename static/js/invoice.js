@@ -1,5 +1,6 @@
 let subtotal = 0;
 let totalGST = 0;
+let invoiceItems = []
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -22,6 +23,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const itemSubtotal = price * quantity;
             const gstAmount = itemSubtotal * gst / 100;
             const itemTotal = itemSubtotal + gstAmount;
+            invoiceItems.push({
+                product_id: selectedOption.value,
+                product_name: productName,
+                quantity: quantity,
+                price: price,
+                gst_percentage: gst
+            });
 
             subtotal += itemSubtotal;
             totalGST += gstAmount;
@@ -29,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const tbody =
                 document.getElementById("invoiceItemsBody");
 
-            if (tbody.querySelector("td[colspan='5']")) {
+            if (tbody.querySelector("td[colspan='6']")) {
                 tbody.innerHTML = "";
             }
 
@@ -42,6 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td class="px-4 py-3">₹${itemTotal.toFixed(2)}</td>
                 <td class="px-4 py-3">
                     <button
+                        type="button"
+                        onclick="removeItem(this)"
                         class="bg-red-500 text-white px-3 py-1 rounded">
                         Remove
                     </button>
@@ -58,6 +68,47 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById("grandTotal").innerText =
                 "₹" + (subtotal + totalGST).toFixed(2);
 
+            document.getElementById("invoiceItems").value =
+                JSON.stringify(invoiceItems);
+
+            document.getElementById("subtotalInput").value =
+                subtotal.toFixed(2);
+
+            document.getElementById("gstInput").value =
+                totalGST.toFixed(2);
+
+            document.getElementById("grandTotalInput").value =
+                (subtotal + totalGST).toFixed(2);
+
         });
 
+    const invoiceForm = document.querySelector("form");
+
+    invoiceForm.addEventListener("submit", function (e) {
+
+        const customer =
+            document.getElementById("customerSelect").value;
+
+        if (!customer) {
+
+            alert("Please select a customer");
+            e.preventDefault();
+            return;
+        }
+
+        if (invoiceItems.length === 0) {
+
+            alert("Please add at least one item");
+            e.preventDefault();
+            return;
+        }
+
+    });
+
 });
+
+function removeItem(button) {
+    const row = button.closest("tr");
+    row.remove();
+
+}

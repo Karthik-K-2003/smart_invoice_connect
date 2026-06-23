@@ -123,3 +123,69 @@ function toggleConfirmPassword() {
 
     }
 }
+
+// BUSINESS PROFILE
+let originalShopName = "";
+let originalPhone = "";
+let originalBusinessEmail = "";
+let originalGST = "";
+let originalAddress = "";
+
+function enableBusinessEdit() {
+
+    const shopName = document.getElementById("shop_name");
+    const phone = document.getElementById("phone");
+    const email = document.getElementById("business_email");
+    const gst = document.getElementById("gst_number");
+    const address = document.getElementById("address");
+
+    originalShopName = shopName.value;
+    originalPhone = phone.value;
+    originalBusinessEmail = email.value;
+    originalGST = gst.value;
+    originalAddress = address.value;
+
+    shopName.removeAttribute("readonly");
+    phone.removeAttribute("readonly");
+    email.removeAttribute("readonly");
+    gst.removeAttribute("readonly");
+    address.removeAttribute("readonly");
+
+    document
+        .getElementById("businessEditBtn")
+        .classList.add("hidden");
+
+    document
+        .getElementById("businessActionButtons")
+        .classList.remove("hidden");
+}
+
+
+function cancelBusinessEdit() {
+
+    const shopName = document.getElementById("shop_name");
+    const phone = document.getElementById("phone");
+    const email = document.getElementById("business_email");
+    const gst = document.getElementById("gst_number");
+    const address = document.getElementById("address");
+
+    shopName.value = originalShopName;
+    phone.value = originalPhone;
+    email.value = originalBusinessEmail;
+    gst.value = originalGST;
+    address.value = originalAddress;
+
+    shopName.setAttribute("readonly", true);
+    phone.setAttribute("readonly", true);
+    email.setAttribute("readonly", true);
+    gst.setAttribute("readonly", true);
+    address.setAttribute("readonly", true);
+
+    document
+        .getElementById("businessEditBtn")
+        .classList.remove("hidden");
+
+    document
+        .getElementById("businessActionButtons")
+        .classList.add("hidden");
+}

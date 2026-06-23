@@ -1,0 +1,31 @@
+@media print {
+
+    body {
+        background: white !important;
+    }
+
+    .sidebar,
+    header,
+    nav,
+    .no-print {
+        display: none !important;
+    }
+
+    #invoicePrintArea {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 20px !important;
+
+        background: white !important;
+
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    * {
+        background: white !important;
+    }
+
+}
