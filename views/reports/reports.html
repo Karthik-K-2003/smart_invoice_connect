@@ -1,13 +1,203 @@
 {% extends 'layouts/dashboard_base.html' %}
 
-{% block title %}Reports | Smart Invoice{% endblock %}
+{% block title %}
+Reports | Smart Invoice
+{% endblock %}
 
-{% block page_title %}Reports{% endblock %}
+{% block page_title %}
+Reports
+{% endblock %}
 
 {% block content %}
 
-<h1 class="text-2xl font-semibold">
-    Reports Module
-</h1>
+<!-- REPORT CARDS -->
+
+<div class="grid grid-cols-4 gap-6">
+
+    <div class="bg-white p-6 rounded-xl shadow border border-black">
+
+        <h3 class="text-gray-500">
+            Total Invoices
+        </h3>
+
+        <p class="text-3xl font-bold mt-2">
+            {{ total_invoices }}
+        </p>
+
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow border border-black">
+
+        <h3 class="text-gray-500">
+            Collected Revenue
+        </h3>
+
+        <p class="text-3xl font-bold mt-2 text-green-600">
+            ₹{{ collected_revenue }}
+        </p>
+
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow border border-black">
+
+        <h3 class="text-gray-500">
+            Total Customers
+        </h3>
+
+        <p class="text-3xl font-bold mt-2">
+            {{ total_customers }}
+        </p>
+
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow border border-black">
+
+        <h3 class="text-gray-500">
+            Outstanding Revenue
+        </h3>
+
+        <p class="text-3xl font-bold mt-2 text-yellow-600">
+            ₹{{ outstanding_revenue }}
+        </p>
+
+    </div>
+
+</div>
+
+<!-- FILTER -->
+
+<div class="bg-white p-6 rounded-xl shadow mt-6">
+
+    <form method="GET" class="flex flex-wrap justify-center items-center gap-4">
+
+        <input type="date" name="from_date" value="{{ from_date }}" class="border border-black rounded-lg px-4 py-2">
+
+        <input type="date" name="to_date" value="{{ to_date }}" class="border border-black rounded-lg px-4 py-2">
+
+        <button type="submit" class="bg-cyan-500 text-white px-5 py-2 rounded-lg">
+
+            Generate Report
+
+        </button>
+
+        <a href="{{ url_for('reports.reports') }}" class="bg-gray-500 text-white px-5 py-2 rounded-lg">
+
+            Reset
+
+        </a>
+
+        <a href="{{ url_for('reports.export_csv') }}" class=" bg-green-600 text-white px-5 py-2 rounded-lg">
+
+            Export CSV
+
+        </a>    
+
+    </form>
+
+</div>
+
+<!-- SALES REPORT -->
+
+<div class="bg-white p-6 rounded-xl shadow mt-6">
+
+    <h2 class="text-xl font-bold mb-4">
+        Sales Report
+    </h2>
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+
+            <tr>
+
+                <th class="px-4 py-3 text-left">
+                    Invoice
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Customer
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Amount
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Status
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Date
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if invoices %}
+
+            {% for invoice in invoices %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+                    INV{{ "%04d"|format(invoice["id"]) }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ invoice["customer_name"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    ₹{{ invoice["grand_total"] }}
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {% if invoice["status"] == "Paid" %}
+
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Paid ✓
+                    </span>
+
+                    {% else %}
+
+                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Pending ⏳
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ invoice["created_at"] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="5" class="text-center py-8 text-gray-500">
+
+                    No report data found.
+
+                </td>
+
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
 
 {% endblock %}
