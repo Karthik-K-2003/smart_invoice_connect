@@ -57,19 +57,21 @@
                 <th class="px-4 py-3 text-left">Customer</th>
                 <th class="px-4 py-3 text-left">Date</th>
                 <th class="px-4 py-3 text-left">Total</th>
+                <th class="px-4 py-3 text-left">Status</th>
                 <th class="px-4 py-3 text-left">Actions</th>
             </tr>
 
         </thead>
 
         <tbody>
+            {% if invoices %}
 
             {% for invoice in invoices %}
 
             <tr class="border-t">
 
                 <td class="px-4 py-3">
-                    INV{{ invoice["id"] }}
+                    INV{{ "%04d"|format(invoice["id"]) }}
                 </td>
 
                 <td class="px-4 py-3">
@@ -82,6 +84,24 @@
 
                 <td class="px-4 py-3">
                     ₹{{ invoice["grand_total"] }}
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {% if invoice["status"] == "Paid" %}
+
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Paid ✓
+                    </span>
+
+                    {% else %}
+
+                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                        Pending ⏳
+                    </span>
+
+                    {% endif %}
+
                 </td>
 
                 <td class="px-4 py-3">
@@ -102,6 +122,19 @@
             </tr>
 
             {% endfor %}
+            {% else %}
+
+            <tr>
+
+                <td colspan="6" class="text-center py-8 text-gray-500">
+
+                    No invoices found.
+
+                </td>
+
+            </tr>
+
+            {% endif %}
 
         </tbody>
 

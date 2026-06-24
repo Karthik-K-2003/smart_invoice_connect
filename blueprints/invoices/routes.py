@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, request, send_file
+from flask import render_template, session, redirect, request, send_file, flash
 from database.db import get_db_connection
 from blueprints.invoices import invoices_bp
 import json
@@ -57,9 +57,23 @@ def save_invoice():
     gst_amount = request.form["gst_amount"]
     grand_total = request.form["grand_total"]
 
+    if not customer_id:
+        flash(
+            "Please select a customer!",
+            "error"
+        )
+        return redirect("/invoices")
+
     invoice_items = json.loads(
         request.form["invoice_items"]
     )
+
+    if len(invoice_items) == 0:
+        flash(
+            "Please add at least one item!",
+            "error"
+        )
+        return redirect("/invoices")
 
     conn = get_db_connection()
 
@@ -71,20 +85,30 @@ def save_invoice():
             customer_id,
             subtotal,
             gst_amount,
-            grand_total
+            grand_total,
+            status
         )
-        VALUES (?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?)
         """,
         (
             session["user_id"],
             customer_id,
             subtotal,
             gst_amount,
-            grand_total
+            grand_total,
+            "Pending"
         )
     )
 
     invoice_id = cursor.lastrowid
+
+    if item["quantity"] <= 0:
+        flash(
+            "Quantity must be greater than 0!",
+            "error"
+        )
+        conn.close()
+        return redirect("/invoices")
 
     for item in invoice_items:
 

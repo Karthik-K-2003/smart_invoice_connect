@@ -1,0 +1,142 @@
+{% extends 'layouts/dashboard_base.html' %}
+
+{% block title %}
+Payment History
+{% endblock %}
+
+{% block page_title %}
+Payment History
+{% endblock %}
+
+{% block content %}
+
+<div class="bg-white p-6 rounded-xl shadow">
+
+    <div class="flex justify-between items-center mb-6">
+
+        <form method="GET" class="flex gap-3">
+
+            <input type="text" name="search" value="{{ search }}" placeholder="Search Invoice ID or Customer"
+                class="border border-black rounded-lg px-4 py-2 w-80">
+
+            <button type="submit" class="bg-cyan-500 text-white px-5 py-2 rounded-lg">
+
+                Search
+
+            </button>
+
+
+            <input type="date" name="from_date" value="{{ from_date }}" class="border rounded-lg px-4 py-2">
+
+            <input type="date" name="to_date" value="{{ to_date }}" class="border rounded-lg px-4 py-2">
+
+            <button type="submit" class="bg-cyan-500 text-white px-5 py-2 rounded-lg">
+
+                Filter
+
+            </button>
+            <a href="{{ url_for('payments.payment_history') }}" class="bg-gray-500 text-white px-5 py-2 rounded-lg">
+
+                Reset
+
+            </a>
+
+        </form>
+
+        <a href="{{ url_for('payments.payments') }}" class="bg-cyan-500 text-white px-4 py-2 rounded-lg">
+
+            + Record Payment
+
+        </a>
+
+    </div>
+
+    <table class="w-full">
+
+        <thead class="bg-gray-100">
+
+            <tr>
+
+                <th class="px-4 py-3 text-left">
+                    Payment ID
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Invoice
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Customer
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Method
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Amount
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Date
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+            {% if payments %}
+
+            {% for payment in payments %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+                    PAY{{ "%04d"|format(payment["id"]) }}
+                </td>
+
+                <td class="px-4 py-3">
+                    INV{{ "%04d"|format(payment["invoice_number"]) }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ payment["customer_name"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ payment["payment_method"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    ₹{{ payment["paid_amount"] }}
+                </td>
+
+                <td class="px-4 py-3">
+                    {{ payment["payment_date"] }}
+                </td>
+
+            </tr>
+
+            {% endfor %}
+            {% else %}
+
+            <tr>
+
+                <td colspan="6" class="text-center py-8 text-gray-500">
+
+                    No payments found.
+
+                </td>
+
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

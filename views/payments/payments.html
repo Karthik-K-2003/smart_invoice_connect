@@ -1,13 +1,171 @@
 {% extends 'layouts/dashboard_base.html' %}
 
-{% block title %}Payments | Smart Invoice{% endblock %}
+{% block title %}
+Payments | Smart Invoice
+{% endblock %}
 
-{% block page_title %}Payments{% endblock %}
+{% block page_title %}
+Payments
+{% endblock %}
+
 
 {% block content %}
 
-<h1 class="text-2xl font-semibold">
-    Payments Module
-</h1>
+<div class="flex justify-between items-center mb-6">
+
+    <h2 class="text-2xl font-bold">
+        Record Payment
+    </h2>
+
+    <a href="{{ url_for('payments.payment_history') }}" class="bg-gray-600 text-white px-4 py-2 rounded-lg">
+
+        Payment History
+
+    </a>
+
+</div>
+
+<form action="{{ url_for('payments.save_payment') }}" method="POST" class="bg-white p-6 rounded-xl shadow">
+
+    <!-- SELECT INVOICE -->
+    <div>
+
+        <label class="block mb-2 font-medium">
+            Select Invoice
+        </label>
+
+        <select id="invoiceSelect" class="w-full border rounded-lg px-4 py-3" required>
+
+            <option value="">
+                Select Invoice
+            </option>
+
+            {% for invoice in invoices %}
+
+            <option value="{{ invoice['id'] }}" data-customer="{{ invoice['customer_name'] }}"
+                data-total="{{ invoice['grand_total'] }}">
+
+                INV{{ "%04d"|format(invoice['id']) }}
+                - {{ invoice['customer_name'] }}
+                - ₹{{ invoice['grand_total'] }}
+
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <!-- HIDDEN INVOICE ID -->
+
+    <input type="hidden" id="invoiceId" name="invoice_id">
+
+    <!-- CUSTOMER INFO -->
+
+    <div class="mt-6 bg-gray-50 p-5 rounded-lg border">
+
+        <p class="mb-3">
+
+            <strong>Customer Name:</strong>
+
+            <span id="customerName">
+                -
+            </span>
+
+        </p>
+
+        <p>
+
+            <strong>Invoice Amount:</strong>
+
+            ₹<span id="invoiceAmount">
+                0.00
+            </span>
+
+        </p>
+
+    </div>
+
+    <!-- PAYMENT METHOD -->
+
+    <div class="mt-6">
+
+        <label class="block mb-2 font-medium">
+            Payment Method
+        </label>
+
+        <select name="payment_method" class="w-full border rounded-lg px-4 py-3" required>
+
+            <option value="">
+                Select Payment Method
+            </option>
+
+            <option value="Cash">
+                Cash
+            </option>
+
+            <option value="UPI">
+                UPI
+            </option>
+
+            <option value="Card">
+                Card
+            </option>
+
+        </select>
+
+    </div>
+
+    <!-- PAID AMOUNT -->
+
+    <div class="mt-6">
+
+        <label class="block mb-2 font-medium">
+            Paid Amount
+        </label>
+
+        <input type="number" step="0.01" name="paid_amount" id="paidAmount" class="w-full border rounded-lg px-4 py-3"
+            required>
+
+    </div>
+
+    <!-- SAVE BUTTON -->
+
+    <div class="mt-6">
+
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white px-6 py-3 rounded-lg">
+
+            Save Payment
+
+        </button>
+
+    </div>
+
+</form>
+
+<script>
+
+    document.getElementById("invoiceSelect")
+        .addEventListener("change", function () {
+
+            const selected =
+                this.options[this.selectedIndex];
+
+            document.getElementById("customerName").innerText =
+                selected.dataset.customer || "-";
+
+            document.getElementById("invoiceAmount").innerText =
+                selected.dataset.total || "0.00";
+
+            document.getElementById("invoiceId").value =
+                selected.value;
+
+            document.getElementById("paidAmount").value =
+                selected.dataset.total || "";
+
+        });
+
+</script>
 
 {% endblock %}

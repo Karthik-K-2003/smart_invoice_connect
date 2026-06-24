@@ -84,6 +84,19 @@ CREATE TABLE IF NOT EXISTS business_settings(
 ''')
 
 
+# PAYMENTS TABLE
+conn.execute("""
+CREATE TABLE IF NOT EXISTS payments(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invoice_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    payment_method TEXT NOT NULL,
+    paid_amount REAL NOT NULL,
+    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)
+""")
+
+
 conn.commit()
 conn.close()
 
