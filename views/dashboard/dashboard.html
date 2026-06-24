@@ -5,8 +5,426 @@
 {% block page_title %}Dashboard{% endblock %}
 
 {% block content %}
-<h1 class="text-2xl font-semibold">
-    Dashboard Module
-</h1>
+
+<!-- DASHBOARD STATS -->
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+    <!-- Total Products -->
+    <div
+        class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Total Products
+                </p>
+
+                <h2 class="text-5xl font-extrabold mt-2">
+                    {{ total_products }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                📦
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Total Customers -->
+    <div
+        class="bg-gradient-to-r from-violet-500 to-purple-600 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Total Customers
+                </p>
+
+                <h2 class="text-5xl font-extrabold mt-2">
+                    {{ total_customers }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                👥
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Total Invoices -->
+    <div
+        class="bg-gradient-to-r from-indigo-500 to-blue-600 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Total Invoices
+                </p>
+
+                <h2 class="text-5xl font-extrabold mt-2">
+                    {{ total_invoices }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                📄
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Paid Invoices -->
+    <div
+        class="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Paid Invoices
+                </p>
+
+                <h2 class="text-5xl font-extrabold mt-2">
+                    {{ paid_invoices }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                ✅
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Collected Revenue -->
+    <div
+        class="bg-gradient-to-r from-teal-500 to-green-600 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Collected Revenue
+                </p>
+
+                <h2 class="text-4xl font-extrabold mt-2">
+                    ₹{{ "%.2f"|format(collected_revenue or 0) }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                💰
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pending Invoices -->
+    <div
+        class="bg-gradient-to-r from-orange-500 to-amber-500 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Pending Invoices
+                </p>
+
+                <h2 class="text-5xl font-extrabold mt-2">
+                    ₹{{ "%.2f"|format(pending_revenue or 0) }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                ⏳
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pending Revenue -->
+    <div
+        class="bg-gradient-to-r from-red-500 to-pink-600 text-white p-6 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+
+        <div class="flex justify-between items-center">
+
+            <div>
+
+                <p class="text-sm opacity-90">
+                    Pending Revenue
+                </p>
+
+                <h2 class="text-4xl font-extrabold mt-2">
+                    ₹{{ "%.2f"|format(pending_revenue) }}
+                </h2>
+
+            </div>
+
+            <div class="text-5xl opacity-70">
+                📈
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- RECENT INVOICES -->
+<div class="bg-white p-6 rounded-xl shadow mt-6">
+
+    <div class="flex justify-between items-center mb-4">
+
+        <h2 class="text-xl font-bold">
+            Recent Invoices
+        </h2>
+
+        <a href="{{ url_for('invoices.invoice_history') }}" class="text-cyan-600 font-medium hover:underline">
+
+            View All →
+
+        </a>
+
+    </div>
+
+    <table class="w-full">
+
+        <thead class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
+
+            <tr>
+
+                <th class="px-4 py-3 text-left">
+                    Invoice ID
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Customer
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Amount
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Status
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Date
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if recent_invoices %}
+
+            {% for invoice in recent_invoices %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+
+                    INV{{ "%04d"|format(invoice["id"]) }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {{ invoice["customer_name"] }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    ₹{{ invoice["grand_total"] }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {% if invoice["status"] == "Paid" %}
+
+                    <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+
+                        Paid ✓
+
+                    </span>
+
+                    {% else %}
+
+                    <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+
+                        Pending ⏳
+
+                    </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {{ invoice["created_at"][:10] }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="5" class="text-center py-8 text-gray-500">
+
+                    No invoices found.
+
+                </td>
+
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<div class="bg-white p-6 rounded-xl shadow mt-6">
+
+    <div class="flex justify-between items-center mb-4">
+
+        <h2 class="text-xl font-bold">
+            Recent Payments
+        </h2>
+
+        <a href="{{ url_for('payments.payment_history') }}" class="text-cyan-600 font-medium hover:underline">
+
+            View All →
+
+        </a>
+
+    </div>
+
+    <table class="w-full">
+
+        <thead class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white">
+
+            <tr>
+
+                <th class="px-4 py-3 text-left">
+                    Payment ID
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Invoice
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Method
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Amount
+                </th>
+
+                <th class="px-4 py-3 text-left">
+                    Date
+                </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            {% if recent_payments %}
+
+            {% for payment in recent_payments %}
+
+            <tr class="border-t">
+
+                <td class="px-4 py-3">
+
+                    PAY{{ "%04d"|format(payment["id"]) }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    INV{{ "%04d"|format(payment["invoice_number"]) }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {{ payment["payment_method"] }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    ₹{{ payment["paid_amount"] }}
+
+                </td>
+
+                <td class="px-4 py-3">
+
+                    {{ payment["payment_date"][:10] }}
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+            {% else %}
+
+            <tr>
+
+                <td colspan="5" class="text-center py-8 text-gray-500">
+
+                    No payments found.
+
+                </td>
+
+            </tr>
+
+            {% endif %}
+
+        </tbody>
+
+    </table>
+
+</div>
 
 {% endblock %}
