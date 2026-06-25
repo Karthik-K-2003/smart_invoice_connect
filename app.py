@@ -26,13 +26,13 @@ mail.init_app(app)
 app.permanent_session_lifetime = timedelta(days=7)
 
 
-#HOME
+# HOME
 @app.route("/")
 def home():
     return redirect("/login")
 
 
-#BLUEPRINTS
+# BLUEPRINTS
 app.register_blueprint(auth_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(products_bp)
@@ -41,6 +41,14 @@ app.register_blueprint(invoices_bp)
 app.register_blueprint(payments_bp)
 app.register_blueprint(reports_bp)
 app.register_blueprint(settings_bp)
+
+
+@app.after_request
+def add_cache_control_headers(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 if __name__ == "__main__":

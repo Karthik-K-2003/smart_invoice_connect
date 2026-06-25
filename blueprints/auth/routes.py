@@ -54,6 +54,9 @@ def register():
 # LOGIN
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
+    if "user_id" in session:
+        return redirect("/dashboard")
+    
     if request.method == "POST":
         email = request.form["email"]
         password = request.form["password"]

@@ -38,9 +38,17 @@ def add_product():
 
     product_name = request.form["product_name"]
     category = request.form["category"]
-    price = request.form["price"]
+    price = float(request.form["price"])
     gst_percentage = request.form["gst_percentage"]
-    stock = request.form["stock"]
+    stock = int(request.form["stock"])
+
+    if price <= 0:
+        flash("Price must be greater than 0!", "error")
+        return redirect("/products")
+
+    if stock < 0:
+        flash("Stock cannot be negative!", "error")
+        return redirect("/products")
 
     conn = get_db_connection()
 
@@ -55,7 +63,7 @@ def add_product():
 
     conn.commit()
     conn.close()
-
+    flash("Product added successfully!", "success")
     return redirect("/products")
 
 
@@ -80,9 +88,17 @@ def edit_product(product_id):
 
         product_name = request.form["product_name"]
         category = request.form["category"]
-        price = request.form["price"]
+        price = float(request.form["price"])
         gst_percentage = request.form["gst_percentage"]
-        stock = request.form["stock"]
+        stock = int(request.form["stock"])
+
+        if price <= 0:
+            flash("Price must be greater than 0!", "error")
+            return redirect("/products")
+
+        if stock < 0:
+            flash("Stock cannot be negative!", "error")
+            return redirect("/products")
 
         conn.execute(
             """
@@ -111,7 +127,7 @@ def edit_product(product_id):
         return redirect("/products")
 
     conn.close()
-
+    flash("Product added successfully!", "success")
     return render_template(
         "products/edit_product.html",
         product=product,

@@ -48,13 +48,29 @@ def recommendations(product_id):
 
     if "user_id" not in session:
         return {"products": []}
-    
+
     exclude = request.args.get("exclude", "")
     exclude_ids = []
     if exclude:
         exclude_ids = exclude.split(",")
 
     conn = get_db_connection()
+
+    business = conn.execute(
+        """
+        SELECT shop_type
+        FROM users
+        WHERE id = ?
+        """,
+        (session["user_id"],)
+    ).fetchone()
+
+    if not business or business["shop_type"] not in [
+        "Clothing Store",
+        "Electronics Store"
+    ]:
+        conn.close()
+        return {"products": []}
 
     invoice_ids = conn.execute(
         """
@@ -81,9 +97,10 @@ def recommendations(product_id):
         ON invoice_items.product_id = products.id
     WHERE invoice_items.invoice_id IN ({placeholders})
     AND invoice_items.product_id != ?
+    AND products.user_id = ?
     """
 
-    params = invoice_list + [product_id]
+    params = invoice_list + [product_id, session["user_id"]]
 
     if exclude_ids:
 
