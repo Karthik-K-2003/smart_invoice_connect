@@ -95,7 +95,7 @@ def dashboard():
         ON invoices.customer_id = customers.id
         WHERE invoices.user_id = ?
         ORDER BY invoices.id DESC
-        LIMIT 5
+        LIMIT 3
         """,
         (session["user_id"],)
     ).fetchall()

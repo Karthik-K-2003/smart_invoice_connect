@@ -25,7 +25,8 @@ Payments
 
 </div>
 
-<form action="{{ url_for('payments.save_payment') }}" method="POST" class="bg-white p-6 rounded-xl shadow">
+<form id="paymentForm" action="{{ url_for('payments.save_payment') }}" method="POST"
+    class="bg-white p-6 rounded-xl shadow">
 
     <!-- SELECT INVOICE -->
     <div>
@@ -144,28 +145,22 @@ Payments
 
 </form>
 
-<script>
+<!-- Loading Spinner -->
+<div id="loadingSpinner" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50">
 
-    document.getElementById("invoiceSelect")
-        .addEventListener("change", function () {
+    <div class="bg-white p-6 rounded-xl flex flex-col items-center shadow-lg">
 
-            const selected =
-                this.options[this.selectedIndex];
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-cyan-500 border-t-transparent"></div>
 
-            document.getElementById("customerName").innerText =
-                selected.dataset.customer || "-";
+        <p class="mt-4 font-semibold text-gray-700">
+            Processing Payment...
+        </p>
 
-            document.getElementById("invoiceAmount").innerText =
-                selected.dataset.total || "0.00";
+    </div>
 
-            document.getElementById("invoiceId").value =
-                selected.value;
+</div>
 
-            document.getElementById("paidAmount").value =
-                selected.dataset.total || "";
 
-        });
-
-</script>
+<script src="{{ url_for('static', filename='js/payment.js') }}"></script>
 
 {% endblock %}

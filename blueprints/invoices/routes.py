@@ -42,6 +42,80 @@ def invoices():
     )
 
 
+# Recommendation
+@invoices_bp.route("/recommendations/<int:product_id>")
+def recommendations(product_id):
+
+    if "user_id" not in session:
+        return {"products": []}
+    
+    exclude = request.args.get("exclude", "")
+    exclude_ids = []
+    if exclude:
+        exclude_ids = exclude.split(",")
+
+    conn = get_db_connection()
+
+    invoice_ids = conn.execute(
+        """
+        SELECT DISTINCT invoice_id
+        FROM invoice_items
+        WHERE product_id = ?
+        """,
+        (product_id,)
+    ).fetchall()
+
+    if not invoice_ids:
+        conn.close()
+        return {"products": []}
+
+    invoice_list = [str(row["invoice_id"]) for row in invoice_ids]
+    placeholders = ",".join(["?"] * len(invoice_list))
+
+    query = f"""
+    SELECT
+        products.*,
+        COUNT(*) AS purchase_count
+    FROM invoice_items
+    JOIN products
+        ON invoice_items.product_id = products.id
+    WHERE invoice_items.invoice_id IN ({placeholders})
+    AND invoice_items.product_id != ?
+    """
+
+    params = invoice_list + [product_id]
+
+    if exclude_ids:
+
+        exclude_placeholders = ",".join(["?"] * len(exclude_ids))
+
+        query += f"""
+        AND products.id NOT IN ({exclude_placeholders})
+        """
+
+        params += exclude_ids
+
+    query += """
+    GROUP BY products.id
+    ORDER BY purchase_count DESC
+    LIMIT 4
+    """
+
+    recommendations = conn.execute(
+        query,
+        params
+    ).fetchall()
+
+    conn.close()
+
+    return {
+        "products": [
+            dict(product)
+            for product in recommendations
+        ]
+    }
+
+
 # Add Save
 @invoices_bp.route("/invoices/save", methods=["POST"])
 def save_invoice():

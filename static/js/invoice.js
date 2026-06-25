@@ -62,6 +62,9 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
 
             updateTotals();
+
+            loadRecommendations(selectedOption.value, invoiceItems.map(item => item.product_id));
+
             productSelect.selectedIndex = 0;
             quantityInput.value = 1;
 
@@ -123,6 +126,76 @@ function removeItem(button, price, gst, quantity, productId) {
     }
 
     updateTotals();
+
+}
+
+
+async function loadRecommendations(productId, currentProducts = []) {
+
+    if (!productId) {
+        document
+            .getElementById("recommendationSection")
+            .classList.add("hidden");
+        return;
+    }
+
+const response = await fetch(`/recommendations/${productId}?exclude=${currentProducts.join(",")}`);
+
+    const data = await response.json();
+
+    const list = document.getElementById("recommendationList");
+
+    list.innerHTML = "";
+
+    if (data.products.length === 0) {
+
+        document
+            .getElementById("recommendationSection")
+            .classList.add("hidden");
+
+        return;
+    }
+
+    document
+        .getElementById("recommendationSection")
+        .classList.remove("hidden");
+
+    data.products.forEach(product => {
+
+        list.innerHTML += `
+        <div class="border rounded-lg p-4 shadow bg-gray-50">
+
+            <h4 class="font-semibold">
+                ${product.product_name}
+            </h4>
+
+            <p class="text-cyan-600 mt-2">
+                ₹${product.price}
+            </p>
+
+            <button
+                type="button"
+                onclick="addRecommendedProduct(${product.id})"
+                class="mt-3 w-full bg-cyan-500 hover:bg-cyan-600 text-white py-2 rounded">
+
+                Add to Invoice
+
+            </button>
+
+        </div>
+        `;
+
+    });
+
+}
+
+
+function addRecommendedProduct(productId) {
+
+    const productSelect = document.getElementById("productSelect");
+    productSelect.value = productId;
+    document.getElementById("quantity").value = 1;
+    document.getElementById("addItemBtn").click();
 
 }
 
