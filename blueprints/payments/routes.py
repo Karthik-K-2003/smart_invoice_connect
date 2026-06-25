@@ -1,7 +1,11 @@
-from flask import render_template, session, redirect, request, flash
+from flask import render_template, session, redirect, request, flash, current_app
 from blueprints.payments import payments_bp
 from database.db import get_db_connection
 
+from flask_mail import Message
+from utils.mail import mail
+from utils.pdf_generator import generate_invoice_pdf
+import os
 
 # Payment
 @payments_bp.route("/payments")
@@ -33,6 +37,38 @@ def payments():
         invoices=invoices,
         active_page="payments"
     )
+
+
+#Mail to Customer
+def send_invoice_email(customer_email, customer_name, pdf_path):
+
+    msg = Message(
+        subject="Payment Confirmation - Smart Invoice",
+        recipients=[customer_email]
+    )
+
+    msg.body = f"""
+        Dear {customer_name},
+
+        Thank you for your payment.
+
+        Your payment has been received successfully.
+
+        Please find your invoice attached with this email.
+
+        Regards,
+        Smart Invoice
+        """
+
+    with current_app.open_resource(pdf_path) as pdf:
+
+        msg.attach(
+            os.path.basename(pdf_path),
+            "application/pdf",
+            pdf.read()
+        )
+
+    mail.send(msg)
 
 
 # Save Payment
@@ -73,9 +109,13 @@ def save_payment():
 
     invoice = conn.execute(
         """
-        SELECT grand_total
+        SELECT invoices.*,
+            customers.customer_name,
+            customers.email AS customer_email
         FROM invoices
-        WHERE id = ?
+        JOIN customers
+        ON invoices.customer_id = customers.id
+        WHERE invoices.id = ?
         """,
         (invoice_id,)
     ).fetchone()
@@ -138,6 +178,11 @@ def save_payment():
     )
 
     conn.commit()
+
+    pdf_path = generate_invoice_pdf(invoice_id, session["user_id"])
+
+    send_invoice_email(invoice["customer_email"], invoice["customer_name"], pdf_path)
+
     conn.close()
 
     flash(

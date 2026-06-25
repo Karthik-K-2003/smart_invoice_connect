@@ -143,6 +143,25 @@
                     <span id="gstAmount">₹0.00</span>
                 </div>
 
+                <div class="flex justify-between mb-2 items-center">
+
+                    <span>Discount (%)</span>
+
+                    <input type="number" id="discountPercent" min="0" max="100" step="1" value="0"
+                        class="w-20 border rounded px-2 py-1 text-right">
+
+                </div>
+
+                <div class="flex justify-between mb-2">
+
+                    <span>Discount Amount</span>
+
+                    <span id="discountAmount">
+                        ₹0.00
+                    </span>
+
+                </div>
+
                 <hr class="my-2">
 
                 <div class="flex justify-between font-bold text-lg">
@@ -158,6 +177,8 @@
         <input type="hidden" id="subtotalInput" name="subtotal">
         <input type="hidden" id="gstInput" name="gst_amount">
         <input type="hidden" id="grandTotalInput" name="grand_total">
+        <input type="hidden" id="discountPercentInput" name="discount_percent">
+        <input type="hidden" id="discountAmountInput" name="discount_amount">
 
         <!-- Save Invoive -->
         <div class="mt-6 flex justify-end">

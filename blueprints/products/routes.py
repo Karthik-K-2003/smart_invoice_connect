@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, request
+from flask import render_template, session, redirect, request, flash
 from database.db import get_db_connection
 from blueprints.products import products_bp
 
@@ -137,6 +137,7 @@ def delete_product(product_id):
     )
 
     conn.commit()
+    flash("Product deleted successfully!", "success")
     conn.close()
 
     return redirect("/products")

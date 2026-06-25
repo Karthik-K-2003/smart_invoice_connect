@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, request
+from flask import render_template, session, redirect, request, flash
 from database.db import get_db_connection
 from blueprints.customers import customers_bp
 
@@ -139,6 +139,7 @@ def delete_customer(customer_id):
     )
 
     conn.commit()
+    flash("Customer deleted successfully!", "success")
     conn.close()
 
     return redirect("/customers")

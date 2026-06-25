@@ -1,6 +1,8 @@
 let subtotal = 0;
 let totalGST = 0;
 let invoiceItems = []
+let discountPercent = 0;
+let discountAmount = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
 
@@ -51,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td class="px-4 py-3">
                     <button
                         type="button"
-                        onclick="removeItem(this)"
+                        onclick="removeItem(this, ${price}, ${gst}, ${quantity}, '${selectedOption.value}')"
                         class="bg-red-500 text-white px-3 py-1 rounded">
                         Remove
                     </button>
@@ -59,35 +61,21 @@ document.addEventListener("DOMContentLoaded", function () {
             </tr>
             `;
 
-            document.getElementById("subtotal").innerText =
-                "₹" + subtotal.toFixed(2);
-
-            document.getElementById("gstAmount").innerText =
-                "₹" + totalGST.toFixed(2);
-
-            document.getElementById("grandTotal").innerText =
-                "₹" + (subtotal + totalGST).toFixed(2);
-
-            document.getElementById("invoiceItems").value =
-                JSON.stringify(invoiceItems);
-
-            document.getElementById("subtotalInput").value =
-                subtotal.toFixed(2);
-
-            document.getElementById("gstInput").value =
-                totalGST.toFixed(2);
-
-            document.getElementById("grandTotalInput").value =
-                (subtotal + totalGST).toFixed(2);
+            updateTotals();
+            productSelect.selectedIndex = 0;
+            quantityInput.value = 1;
 
         });
+
+    document
+        .getElementById("discountPercent")
+        .addEventListener("input", updateTotals);
 
     const invoiceForm = document.querySelector("form");
 
     invoiceForm.addEventListener("submit", function (e) {
 
-        const customer =
-            document.getElementById("customerSelect").value;
+        const customer = document.getElementById("customerSelect").value;
 
         if (!customer) {
 
@@ -107,8 +95,88 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 
-function removeItem(button) {
+function removeItem(button, price, gst, quantity, productId) {
+
     const row = button.closest("tr");
     row.remove();
+
+    const itemSubtotal = price * quantity;
+    const gstAmount = itemSubtotal * gst / 100;
+
+    subtotal -= itemSubtotal;
+    totalGST -= gstAmount;
+
+    invoiceItems = invoiceItems.filter(item =>
+        !(item.product_id == productId && item.quantity == quantity)
+    );
+
+    if (invoiceItems.length === 0) {
+
+        document.getElementById("invoiceItemsBody").innerHTML = `
+            <tr>
+                <td colspan="6" class="text-center py-4 text-gray-500">
+                    No items added
+                </td>
+            </tr>
+        `;
+
+    }
+
+    updateTotals();
+
+}
+
+
+function updateTotals() {
+
+    discountPercent =
+        parseFloat(
+            document.getElementById("discountPercent").value
+        ) || 0;
+
+    if (discountPercent < 0)
+        discountPercent = 0;
+
+    if (discountPercent > 100)
+        discountPercent = 100;
+
+    document.getElementById("discountPercent").value =
+        discountPercent;
+
+    discountAmount =
+        (subtotal + totalGST) * discountPercent / 100;
+
+    const grandTotal =
+        (subtotal + totalGST) - discountAmount;
+
+    document.getElementById("subtotal").innerText =
+        "₹" + subtotal.toFixed(2);
+
+    document.getElementById("gstAmount").innerText =
+        "₹" + totalGST.toFixed(2);
+
+    document.getElementById("discountAmount").innerText =
+        "₹" + discountAmount.toFixed(2);
+
+    document.getElementById("grandTotal").innerText =
+        "₹" + grandTotal.toFixed(2);
+
+    document.getElementById("subtotalInput").value =
+        subtotal.toFixed(2);
+
+    document.getElementById("gstInput").value =
+        totalGST.toFixed(2);
+
+    document.getElementById("discountPercentInput").value =
+        discountPercent;
+
+    document.getElementById("discountAmountInput").value =
+        discountAmount.toFixed(2);
+
+    document.getElementById("grandTotalInput").value =
+        grandTotal.toFixed(2);
+
+    document.getElementById("invoiceItems").value =
+        JSON.stringify(invoiceItems);
 
 }
